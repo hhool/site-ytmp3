@@ -1,0 +1,36 @@
+{
+  "en": {
+    "title": "ytmp3 — YouTube Converter",
+    "desc": "Paste your YouTube link, choose format, click Convert.",
+    "urlPlaceholder": "Paste your YouTube link",
+    "formatMp3": "MP3 (audio)",
+    "formatMp4": "MP4 (video)",
+    "buttonConvert": "Convert / 转换",
+    "creating": "Creating job...",
+    "jobCreated": "Job created, polling...",
+    "statusPrefix": "Job",
+    "completedDownloading": "Completed, downloading...",
+    "downloadComplete": "Download complete",
+    "failed": "Failed",
+    "pollingError": "Polling error",
+    "timeout": "Timed out, check /status",
+    "createJobError": "Create job error"
+  },
+  "zh": {
+    "title": "ytmp3 — YouTube 转换器",
+    "desc": "粘贴 YouTube 链接，选择格式，点击 Convert。",
+    "urlPlaceholder": "粘贴 YouTube 链接",
+    "formatMp3": "MP3 (音频)",
+    "formatMp4": "MP4 (视频)",
+    "buttonConvert": "Convert / 转换",
+    "creating": "创建任务中...",
+    "jobCreated": "任务已创建，开始轮询...",
+    "statusPrefix": "任务",
+    "completedDownloading": "任务完成，开始下载...",
+    "downloadComplete": "下载完成",
+    "failed": "任务失败",
+    "pollingError": "轮询出错",
+    "timeout": "任务超过最长等待时间，请稍后在 /status 查询。",
+    "createJobError": "创建任务出错"
+  }
+}
