@@ -40,7 +40,7 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/site-ytmp3:${{ github.sha }}
 
       - name: Deploy to Fly (optional)
-        if: secrets.FLY_API_TOKEN && secrets.FLY_APP_NAME
+        if: ${{ secrets.FLY_API_TOKEN && secrets.FLY_APP_NAME }}
         uses: superfly/flyctl-actions@v1
         with:
           args: deploy --image ghcr.io/${{ github.repository_owner }}/site-ytmp3:latest --app ${{ secrets.FLY_APP_NAME }}
