@@ -1,0 +1,30 @@
+app = "REPLACE_WITH_FLY_APP_NAME"
+kill_signal = "SIGINT"
+kill_timeout = 5
+
+[build]
+  # If you prefer to deploy a prebuilt image from GHCR, set the image tag here.
+  # Replace REPLACE_OWNER with your GitHub username/org.
+  image = "ghcr.io/REPLACE_OWNER/site-ytmp3:latest"
+
+[env]
+# example env vars; adjust as needed
+REDIS_HOST = "redis"
+JOB_TTL_SECONDS = "3600"
+
+[[services]]
+  internal_port = 8000
+  protocol = "tcp"
+
+  [[services.ports]]
+    handlers = ["http"]
+    port = 80
+
+  [[services.ports]]
+    handlers = ["tls", "http"]
+    port = 443
+
+  [services.concurrency]
+    type = "connections"
+    soft_limit = 100
+    hard_limit = 200
