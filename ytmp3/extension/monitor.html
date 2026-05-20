@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>ytmp3 Monitor</title>
+    <style>body{font-family:system-ui;padding:12px}</style>
+  </head>
+  <body>
+    <h3 id="title">任务监控</h3>
+    <div id="info">正在读取 job 参数...</div>
+    <div id="status"></div>
+    <div style="margin-top:8px"><label for="lang">Language:</label>
+      <select id="lang"><option value="auto">Auto</option><option value="zh">中文</option><option value="en">English</option></select>
+    </div>
+    <script>
+      const i18nUrl = '/frontend/i18n.json'
+      let I18N = null
+      async function loadI18n(){ if(I18N) return I18N; const r=await fetch(i18nUrl); I18N=await r.json(); return I18N }
+      function chooseLang(v){ if(v&&v!=='auto') return v; const nav=navigator.language||'en'; return nav.startsWith('zh')?'zh':'en' }
+      function t(key, lang){ if(!I18N) return key; const l=chooseLang(lang); return (I18N[l]&&I18N[l][key])||I18N['en'][key]||key }
+      const langSelect = document.getElementById('lang')
+      langSelect.addEventListener('change', ()=>{ /* no-op, polls use chosen lang */ })
+    <script>
+      const params = new URLSearchParams(window.location.search)
+      const job = params.get('job')
+      const info = document.getElementById('info')
+      const status = document.getElementById('status')
+      if (!job) {
+        info.textContent = '未指定 job 参数。'
+      } else {
+        info.textContent = 'Job: ' + job
+        await loadI18n()
+        async function poll() {
+          try {
+            const res = await fetch('http://127.0.0.1:8000/status/' + job)
+            if (!res.ok) throw new Error('status request failed')
+            const j = await res.json()
+            status.textContent = t('statusPrefix', langSelect.value) + '：' + j.status + (j.filename ? ('，文件：' + j.filename) : '')
+            if (j.status === 'completed') {
+              const a = document.createElement('a')
+              a.href = 'http://127.0.0.1:8000/download/' + job
+              a.textContent = (langSelect.value==='zh'? '点击下载：' : 'Click to download:') + ' ' + j.filename
+              a.style.display = 'block'
+              status.appendChild(a)
+            } else if (j.status === 'failed') {
+              status.textContent = t('failed', langSelect.value) + '：' + (j.error || '')
+            } else {
+              setTimeout(poll, 3000)
+            }
+          } catch (e) {
+            status.textContent = t('pollingError', langSelect.value) + '：' + e.message
+          }
+        }
+        poll()
+      }
+    </script>
+  </body>
+</html>

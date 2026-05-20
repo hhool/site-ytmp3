@@ -1,0 +1,23 @@
+version: '3.8'
+services:
+  ytmp3:
+    image: ytmp3/ytmp3:latest
+    build:
+      context: .
+      dockerfile: ytmp3/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - REDIS_HOST=redis
+    depends_on:
+      - redis
+    restart: always
+
+  redis:
+    image: redis:7-alpine
+    restart: always
+    volumes:
+      - redis_data:/data
+
+volumes:
+  redis_data:

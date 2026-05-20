@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "ytmp3 helper",
+  "version": "0.1.0",
+  "description": "Quickly open ytmp3 converter with current YouTube URL",
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "permissions": ["tabs", "activeTab", "notifications"],
+  "host_permissions": ["http://127.0.0.1/*", "http://localhost/*"],
+  "icons": {
+    "48": "icon48.png"
+  }
+}
