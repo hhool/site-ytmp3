@@ -1,0 +1,48 @@
+name: Build and Deploy Backend
+
+on:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ytmp3/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/site-ytmp3:latest
+            ghcr.io/${{ github.repository_owner }}/site-ytmp3:${{ github.sha }}
+
+      - name: Deploy to Fly (optional)
+        if: secrets.FLY_API_TOKEN && secrets.FLY_APP_NAME
+        uses: superfly/flyctl-actions@v1
+        with:
+          args: deploy --image ghcr.io/${{ github.repository_owner }}/site-ytmp3:latest --app ${{ secrets.FLY_APP_NAME }}
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
